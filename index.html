@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <body>
+    <div id='root'></div>
+
+
+    <script type="text/babel">
+      var seq=[]
+
+        function pause(milliseconds) {
+	        var dt = new Date();
+	        while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }
+        }
+
+      function myfunc(){
+          console.log("myfunc");
+          console.log(seq.length);
+          console.log("##########################");
+          var ind=0;
+           //document.getElementById("san").innerHTML="REACTJS REACTJS REACTJS";
+            var id = setInterval(frame, 5);
+            function frame() {
+            if (ind == seq.length) {
+                clearInterval(id);
+            } else {
+                document.getElementById("san").innerHTML="No of Swaps:"+ind.toString();
+                document.getElementById("san").style.backgroundColor="blue";
+
+            
+                var A=seq[ind];
+                console.log("A:"+A);
+                var i=A.i;
+                var j=A.j;
+                var ai = A.ai;
+                var aj = A.aj;
+                document.getElementById(i.toString()).style.height = `${aj}px`;
+                document.getElementById(j.toString()).style.height = `${ai}px`;
+                document.getElementById(i.toString()).style.backgroundColor = "blue";
+                document.getElementById(j.toString()).style.backgroundColor = "green";
+                ind++;
+
+
+            }
+         } 
+      }
+      
+      class Bar extends React.Component{
+          constructor(props)
+          {   super(props);
+              this.state = {A:this.props.Array};
+          }
+          render(){
+            console.log("Here");
+            console.log(this.props.Array);
+            console.log("printed");
+            console.log(this.props.Seq);
+            console.log("hogya");
+            var count = -1;
+            //var wid = screen.width/this.props.Array.length - 2 ;
+            var wid = 5 ;
+            return (
+                <div >
+                {this.props.Array.map(
+                                (num)=>{
+                                    console.log("inside:"+num);
+                                    //return <h1>Sandeep</h1>;
+                                   var val = 1;
+                                   count+=1;
+                                    return <div ref={this.props.Seq[count]} id={count.toString()} style={{backgroundColor:"red" , height:num ,width:wid, float:'left',marginLeft:1  }}></div>;
+
+                                })}
+                </div>
+            );
+
+          }
+
+      }
+      
+      class Canvas extends React.Component{
+          constructor(props)
+          {
+              super(props);
+              this.state = {Array:[],Sequence:[]};
+              this.generate = this.generate.bind(this);
+              this.generateBars = this.generateBars.bind(this);
+              this.setSize = this.setSize.bind(this);
+              this.MergeSort = this.MergeSort.bind(this);
+              this.QuickSort = this.QuickSort.bind(this);
+              this.InsertionSort = this.InsertionSort.bind(this);
+              this.SelectionSort = this.SelectionSort.bind(this);
+              //this.Animation = this.Animation.bind(this);
+              this.quicksort = this.quicksort.bind(this);
+              this.partition = this.partition.bind(this);
+              this.size = 0;
+              this.count = 0;
+          }
+         
+         setSize(ev){
+             console.log("setSize");
+             this.size = ev.target.value;
+             console.log("setSize:"+this.size);
+             this.generate(ev);
+         }
+         generate(ev){
+            console.log("generate");
+            document.getElementById('san').innerHTML='No of Swaps:0';
+            document.getElementById("san").style.backgroundColor="blue";
+
+
+            var A = [];
+            var i= 0;
+            var Seq = []
+            while(i<this.size){
+                A.push(Math.floor(Math.random() *200));
+                i+=1;
+                Seq.push(React.createRef());
+            }
+
+            console.log(A);
+            this.setState({Array:A});
+            //this.setState({Sequence:Seq});
+         }
+         generateBars(){
+             console.log("generateBars");
+             if(this.state.Array.length>0)
+             {
+                 return <h1>TRUE</h1>
+             }
+             else{
+                 return <h1>FALSE</h1>
+             }
+
+         }
+         MergeSort(env){
+             console.log('MergeSort');
+         }
+         QuickSort(env){
+             console.log('QuickSort');
+         }
+         InsertionSort(env){
+             console.log("InsertionSort")
+         }
+
+
+        partition(A,left,right){
+            
+            console.log("partition");
+            var pivot = A[right];
+            var i = left-1;
+            for(let j=left;j<right;j++){
+                if( A[j]<=pivot){
+                    i++;
+                    seq.push({i:i,j:j,ai:A[i],aj:A[j]});
+
+                    var temp=A[i];
+                    A[i]=A[j];
+                    A[j]=temp;
+                }
+                
+            }
+            seq.push({i:i+1,j:right,ai:A[i+1],aj:A[right]});
+
+            temp = A[right];
+            A[right]=A[i+1];
+            A[i+1]=temp;
+            //seq.push({i:i+1,j:right,ai:A[i+1],aj:A[right]});
+
+            return i+1;
+            }
+
+
+        quicksort(A,left,right){
+            if (left>=right){
+            return ;
+            }
+            //console.log("quicksort: left:"+left +", right:"+right);
+            //var right=A.length-1;
+            var pivot = this.partition(A,left,right);
+            console.log("pivot:"+pivot);
+            this.quicksort(A,left,pivot-1);
+            this.quicksort(A,pivot+1,right);
+                
+        }
+
+        QuickSort(env){
+             console.log("Quicksort");
+             console.log("seq before len:"+seq.length);
+             seq.length=0;
+             console.log("seq:"+seq);
+             this.quicksort(this.state.Array,0,this.state.Array.length-1);
+             console.log("A:"+this.state.Array);
+             myfunc();
+             console.log('QuickSort');
+         }
+
+
+        pause(milliseconds) {
+	        var dt = new Date();
+	        while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }
+        }
+
+        
+        SelectionSort(env)
+        {
+            //console.log('SelectionSort');
+            let A = this.state.Array;
+            //let Seqq= []
+            seq.length = 0;
+            for(let i=0;i<A.length;i++){
+                for(let j=i+1;j<A.length;j++){
+                    if (A[i]>A[j]){
+                        //var S=new Array(i,j,A[i],A[j]);
+                        var S={i:i,j:j,ai:A[i],aj:A[j]}
+                        //Seqq.push(S);
+                        seq.push(S)
+                        let temp=A[i];
+                        A[i]=A[j];
+                        A[j]=temp;
+                        //this.setState({Array:A});
+                    }
+                    //this.pause(100);
+
+                    //this.delay(1000);
+                    //console.log("great");
+
+                }
+            }
+            //this.state.Sequence({Seq:Seqq});
+            //this.Animation(Seqq);
+            myfunc();
+        }
+
+        render(){
+            console.log("here:"+this.count);
+            this.count+=1;
+            console.log(this.state.Array);
+            return (
+                <div >
+                    <center><div style={{backgroundColor:'violet',color:'yellow',height:30,borderColor:'black',}}>Sorting Visualizer - Sandeep Padhi/IIIT- Lucknow</div></center>
+                    <br/>
+                    <div style={{margin:'auto'}}>
+                        <button id='merge' onClick={this.MergeSort} style={{height:30 , marginLeft:20}}>MERGESORT</button>
+                        <button id='quick' onClick={this.QuickSort} style={{height:30 , marginLeft:20}}>QUICKSORT</button>
+                        <button id='insertion' onClick={this.InsertionSort} style={{height:30 , marginLeft:20}}>INSERTION</button>
+                        <button id='selection' onClick={this.SelectionSort} style={{height:30, marginLeft:20}}>SELECTION</button>
+
+
+                    </div>
+                    <h1 id='san' style={{backgroundColor:'blue'}}>No of Waps</h1>
+                    <div>
+                    <Bar Array={this.state.Array} Seq={this.state.Sequence} />
+                    </div>
+                    <br/>
+                    <br/>
+                    <div style={{display:'block',position:'absolute',marginTop:screen.height-400}}>
+                    Enter size:<input type='text' onChange={this.setSize} id="size" /> &nbsp;&nbsp;&nbsp;<button onClick={this.generate} id='generate'>Generate</button>
+
+                    </div>
+                    
+
+                </div>
+
+            );
+        }
+    }
+
+    ReactDOM.render(<Canvas />, document.getElementById('root'))
+    </script>
+  </body>
+</html>
